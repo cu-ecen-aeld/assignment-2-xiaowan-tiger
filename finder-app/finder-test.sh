@@ -52,9 +52,36 @@ fi
 #make clean
 #make
 
+if [ $assignment = 'assignment2' ]
+then
+
+    AS2_DIR="$(dirname "$0")/../assignments/assignment2"
+
+    # 切换到assignment2 dir
+    #cd "$AS2_DIR" || { echo "目录切换失败: $AS2_DIR"; exit 1; }
+
+    # 执行 make clean
+    make -C "$AS2_DIR" clean
+
+    # 执行 make
+    make -C "$AS2_DIR"
+
+    # 如果编译成功，将生成的 writer 文件拷贝到脚本所在目录
+    if [ -f "$AS2_DIR/writer" ]; then
+        cp "$AS2_DIR/writer" "$(dirname $0)/writer"
+        echo "编译成功，writer 文件已复制到脚本所在目录"
+    else
+        echo "编译失败，未找到 writer 文件"
+        exit 1
+    fi
+
+    #cd "$(dirname "$0")"
+fi
+
+
 for i in $( seq 1 $NUMFILES)
 do
-	./writer.sh "$WRITEDIR/${username}$i.txt" "$WRITESTR"
+	./writer "$WRITEDIR/${username}$i.txt" "$WRITESTR"
 done
 
 OUTPUTSTRING=$(./finder.sh "$WRITEDIR" "$WRITESTR")
